@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<!-- 
+	Anticipatory Story Reader core properties
+	tqos-asr-documizer extends tqos-asr-core so these properties
+	serve far more than this agent
+	Most of the properties here are just for booting ASRCore
+	The primary properties used by this agent are:
+		JSONFileBase
+		BaseDataPath
+-->
+
+<properties>
+
+	<!-- this server commmunicates with the Statistics Server -->
+	<parameter name="StatServerURl" value="localhost" /> <!--  coordinate with StatServer -->
+	<parameter name="StatServerPort" value="6900" /> <!-- coordinate with StatServer -->
+	<parameter name="StatServerClientId" value = "changeme" /> <!-- coordinate with StatServer -->
+
+	<parameter name="DatabaseSchema" value = "tqos_asr" />
+
+	<parameter name="MapDBpmcidsPath" value="/data/pmcids/pmcids" />
+	<parameter name="MapDBdidpmcidsPath" value = "/data/didpmcids/pmids" />
+	
+	<parameter name="ToReadName" value="pmidstoread" />
+
+	<!-- Used by JSONFileReader
+		Put files in this directory to read
+		Files are *.gz of collections of json documents
+	-->
+	<parameter name="JSONFileBase" value="data/in/" />
+	<!-- Used by JSONFileReader -->
+	<parameter name="BaseDataPath" value="data/" />
+	<!-- Used by JSONFileReader -->
+	<!--<parameter name="JSONFileBase" value="/data/out/" />-->
+	
+	<!--<parameter name="BaseDataPath" value="/data/" />-->
+	
+	<parameter name="MapDBpmidsPath" value="/data/pmids/pmids" />
+
+	<parameter name="WordDictionaryPath" value="/data/dictionary.json.gz" />
+
+	<parameter name="TopicProviderPath" value="/data/topics.txt" />
+
+	<parameter name="GraphProviderPath" value="/data/graph.txt" />
+
+	<parameter name="TripleProviderPath" value="/data/triples.txt" />
+
+	<parameter name="SentenceProviderPath" value="/data/sentences.txt" />
+	
+	<parameter name="DocumentProviderPath" value="/data/documents.txt" />
+	
+	<parameter name="OpenNLPModels" value="models/opennlp-models" />
+
+	<parameter name="GraphName" value="wordgrams" />
+	
+
+	<list name="Lenses">
+		<parameter name="CauseLens" value="org.topicquests.os.asr.reader.lens.CausalLens" /> 
+		<parameter name="BeliefLens" value="org.topicquests.os.asr.reader.lens.BeliefLens" /> 
+		<parameter name="BiographyLens" value="org.topicquests.os.asr.reader.lens.BiographyLens" /> 
+		<parameter name="ProcessLens" value="org.topicquests.os.asr.reader.lens.ProcessLens" /> 
+	</list>
+
+	<!-- Properties for ASR -->
+	<parameter name="MapDBreadSentencesPath" value="/data/readsentences" />
+	<parameter name="MapDBreadDocumentsPath" value="/data/readdocuments" />
+
+	
+</properties>
+
