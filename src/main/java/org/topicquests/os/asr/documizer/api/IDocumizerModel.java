@@ -7,6 +7,7 @@ package org.topicquests.os.asr.documizer.api;
 
 import org.topicquests.hyperbrane.api.IDocument;
 import org.topicquests.hyperbrane.api.IParagraph;
+import org.topicquests.os.asr.kafka.KafkaHandler;
 import org.topicquests.support.api.IResult;
 
 import net.minidev.json.JSONObject;
@@ -16,6 +17,8 @@ import net.minidev.json.JSONObject;
  *
  */
 public interface IDocumizerModel {
+	
+	void setKafka(KafkaHandler h);
 
 	IResult acceptDocumentObject(JSONObject documentObject);
 

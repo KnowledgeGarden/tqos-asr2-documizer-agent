@@ -19,10 +19,10 @@ public class Main implements IListener {
 	 */
 	public Main() {
 		environment = new DocumizerEnvironment();
-		jsonFileReader = environment.getJSONFileReader();
-		jsonFileReader.setListener(this);
+		//jsonFileReader = environment.getJSONFileReader();
+		//jsonFileReader.setListener(this);
 		//start
-		jsonFileReader.startReading();
+		//jsonFileReader.startReading();
 	}
 
 	/**

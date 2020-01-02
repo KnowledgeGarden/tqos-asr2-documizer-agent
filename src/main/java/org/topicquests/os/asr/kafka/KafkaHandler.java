@@ -26,7 +26,7 @@ public class KafkaHandler implements IMessageConsumerListener {
 	private MessageProducer producer;
 	private IDocumizerModel model;
 	private final boolean isRewind = false;
-	private final int pollSeconds = 30;
+	private final int pollSeconds = 2;
 	private final String
 		CONSUMER_TOPIC,
 		PRODUCER_TOPIC,

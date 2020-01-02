@@ -26,7 +26,7 @@ public class ConcordanceParagraph  implements IParagraph {
 	private DocumizerEnvironment environment;
 	private ISentenceProvider sentenceProvider;
 
-	private final String 
+	public static final String 
 		ID				 	= "id",
 		PARAGRAPH_KEY		= "para",
 		DOC_ID				= "docId",

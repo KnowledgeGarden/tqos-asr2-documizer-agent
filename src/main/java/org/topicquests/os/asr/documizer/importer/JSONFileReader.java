@@ -152,7 +152,7 @@ public class JSONFileReader {
 		String path = BASE_DATA_PATH + FILES_READ;
 		File f = new File(path);
 		environment.logDebug("JSONFileReader.initializeFilesRead "+f);
-		if (f.exists()) {
+		if (f.exists() && f.getName().endsWith(".txt")) {
 			String line = handler.readFirstLine(f);
 			while (line != null) {
 				filesRead.add(line.trim());

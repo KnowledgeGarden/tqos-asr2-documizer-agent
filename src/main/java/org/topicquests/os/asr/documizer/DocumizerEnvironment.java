@@ -22,6 +22,7 @@ import org.topicquests.os.asr.api.IStatisticsClient;
 import org.topicquests.os.asr.documizer.api.IDocumizerModel;
 import org.topicquests.os.asr.documizer.importer.JSONDocumentReader;
 import org.topicquests.os.asr.documizer.importer.JSONFileReader;
+import org.topicquests.os.asr.kafka.KafkaHandler;
 import org.topicquests.support.RootEnvironment;
 import org.topicquests.support.config.Configurator;
 
@@ -62,6 +63,7 @@ public class DocumizerEnvironment extends RootEnvironment {
 		paragraphProvider = new ParagraphProvider(this);
 		sentenceProvider = new SentenceProvider(this);
 		model = new DocumizerModel(this);
+		model.setKafka(new KafkaHandler(this));
 		try {
 			jsonDocReader = new JSONDocumentReader(this, model);
 		} catch (Exception e) {

@@ -55,7 +55,16 @@ public class DocumentProvider implements IDocumentProvider {
 		String label = node.getLabel("en");
 		if (label == null)
 			label  = "";
-		IResult result = documentDatabase.put(node.getId(), label, node.getData());
+		String pmid = node.getPMID();
+		if (pmid == null)
+			pmid = "";
+		String pmcid = node.getPMCID();
+		if (pmcid == null)
+			pmcid = "";
+		String url = node.getURL();
+		if (url == null)
+			url = "";
+		IResult result = documentDatabase.put(node.getId(), pmid, pmcid, url, label, node.getData());
 		return result;
 	}
 
