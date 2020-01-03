@@ -144,10 +144,13 @@ public class ConcordanceDocument implements IDocument {
 	}
 
 	@Override
-	public void addParagraph(String theParagraph, String language) {
+	public IParagraph addParagraph(String theParagraph, String language) {
 		IParagraph p = new ConcordanceParagraph();
 		p.setParagraph(theParagraph, language);
+		p.setDocumentId(this.getId());
+		p.setID(UUID.randomUUID().toString());
 		this.addParagraph(p);
+		return p;
 	}
 	
 	@Override

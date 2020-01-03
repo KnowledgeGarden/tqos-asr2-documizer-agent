@@ -26,6 +26,7 @@ import org.topicquests.ks.api.ITicket;
 
 import org.topicquests.os.asr.StatisticsHttpClient;
 import org.topicquests.os.asr.api.IDocumentProvider;
+import org.topicquests.os.asr.api.IParagraphProvider;
 import org.topicquests.os.asr.api.IStatisticsClient;
 import org.topicquests.os.asr.common.api.IASRFields;
 import org.topicquests.os.asr.documizer.DocumizerEnvironment;
@@ -43,6 +44,7 @@ public class JSONDocumentReader {
 	private IDocumizerModel model;
 	private IDocumentProvider provider;
 	private ISentenceClient sentenceDatabase;
+	private IParagraphProvider paragraphProvider;
 
 	private IStatisticsClient stats;
 //	private SentenceDetectorME detector;
@@ -58,6 +60,7 @@ public class JSONDocumentReader {
 		model = m;
 		provider = environment.getDocProvider();
 		sentenceDatabase = environment.getSentenceDatabase();
+		paragraphProvider = environment.getParagraphProvider();
 		credentials = new TicketPojo(ITQCoreOntology.SYSTEM_USER);
 	}
 	
@@ -88,6 +91,7 @@ public class JSONDocumentReader {
 			r = provider.putDocument(doc);
 			stats.addToKey(IASRFields.DOCS_IMPORTED);
 		}
+		provider.putDocument(doc);
 	}
 	
 	/**
@@ -116,9 +120,8 @@ public class JSONDocumentReader {
 		if (language == null)
 			language = "en";
 		if (abstr != null) {
-			p = model.newParagraph(abstr, language, docId);
-			//digestParagraph(p, doc.getLanguage(), doc.getId(), p.getID(), doc.getCreatorId());
-			doc.addParagraph(p);
+			p = doc.addParagraph(abstr, language);
+			paragraphProvider.putParagraph(p);
 		}
 		////////////////////
 		// LOOK FOR OTHER PARAGRAPHS
@@ -132,8 +135,8 @@ public class JSONDocumentReader {
 			String det;
 			while (itr.hasNext()) {
 				det = itr.next();
-				p = model.newParagraph(det, language, docId);
-				doc.addParagraph(p);
+				p = doc.addParagraph(det, language);
+				paragraphProvider.putParagraph(p);				
 			}	
 		}
 		

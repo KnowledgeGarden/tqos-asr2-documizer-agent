@@ -96,8 +96,21 @@ public class DocumizerModel implements IDocumizerModel {
 		String docId = doc.getId();
 		JSONDocumentObject nd = new JSONDocumentObject(newDoc);
 		List<JSONObject>paras = nd.listParagraphs();
-		documentProvider.updateDocument(doc);
-		return toParagraphs(paras, docId, doc);
+		List<JSONObject> npx = new ArrayList<JSONObject>();
+		if (paras != null && !paras.isEmpty()) {
+			Iterator<JSONObject>itr = paras.iterator();
+			JSONObject jo;
+			IParagraph p;
+			while (itr.hasNext()) {
+				jo = itr.next();
+				environment.logDebug("DM.update\n"+jo);
+				p = doc.addParagraph(jo.getAsString("text"), jo.getAsString("lang"));
+				npx.add(p.getData());
+			}
+			environment.logDebug("DM.update-1\n"+doc.getData());
+			documentProvider.updateDocument(doc);
+		}
+		return npx;
 	}
 	
 	List<JSONObject> findDocsByLabel(String label) {
