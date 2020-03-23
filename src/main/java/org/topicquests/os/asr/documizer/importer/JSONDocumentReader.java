@@ -104,6 +104,9 @@ public class JSONDocumentReader {
 			lang = "en";
 			doc.setLanguage(lang);
 		}
+		/**
+		//list all abstracts
+		//MASSIVE TODO THIS IS NOT FINISHED - EMPTY FIELDS IN THE CONCORDANCEDOCUMENT
 		List<JSONObject> abstrs = doc.listAbstracts();
 		String abstr = null;
 		if (abstrs != null && !abstrs.isEmpty()) {
@@ -140,7 +143,7 @@ public class JSONDocumentReader {
 			}	
 		}
 		
-		
+		*/
 		
 /*		List<IParagraph> px = doc.listParagraphs();
 		if (px != null && !px.isEmpty()) {
