@@ -9,6 +9,7 @@
 	<!-- Consumer Topic -->
 	<parameter name="DocumizerTopic" value="tagomizer" />
 
+	<!-- deprecated -->
 	<parameter name="DocumizerParagraphTopic" value="paragraph" />
 	
 
