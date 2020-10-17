@@ -40,7 +40,7 @@ public class KafkaHandler implements IMessageConsumerListener {
 		environment = env;
 		model = environment.getModel();
 		CONSUMER_TOPIC = (String)environment.getKafkaTopicProperties().get("DocumizerTopic");
-		PRODUCER_TOPIC = (String)environment.getKafkaTopicProperties().get("DocumizerParagraphTopic");
+		PRODUCER_TOPIC = (String)environment.getKafkaTopicProperties().get("SpacyOutput");
 		consumer = new StringConsumer(environment, AGENT_GROUP,
 					CONSUMER_TOPIC, this, isRewind, pollSeconds);
 		producer = new MessageProducer(environment, AGENT_GROUP, true);

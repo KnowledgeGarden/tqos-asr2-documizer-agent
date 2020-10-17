@@ -81,5 +81,8 @@
 		contains a sentence to be read in Phase 2
 	 -->
 	<parameter name="Phase2SentenceVerb" value="Phase2Sentence" />
-	 
+	
+	<!-- shipping sentences to spacy -->
+	<parameter name="SpacyOutput" value="spacy" />
+	
 </properties>
