@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.topicquests</groupId>
     <artifactId>tqos-asr-documizer-agent</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.5.0-SNAPSHOT</version>
     <name>tqos-asr-documizer</name>
     <developers>
         <developer>
@@ -151,13 +151,19 @@
         </plugins>
     </build>
     <dependencies>
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime -->
-
 		<!-- https://mvnrepository.com/artifact/org.apache.opennlp/opennlp-tools -->
+		<dependency>
+		    <groupId>org.apache.opennlp</groupId>
+		    <artifactId>opennlp-tools</artifactId>
+		    <version>1.9.3</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.opennlp/opennlp-maxent -->
-   		<!--  <dependency>
+		<dependency>
+		    <groupId>org.apache.opennlp</groupId>
+		    <artifactId>opennlp-maxent</artifactId>
+		    <version>3.0.3</version>
+		</dependency>   		
+		<!--  <dependency>
     		<groupId>org.topicquests</groupId>
     		<artifactId>tqos-asr2-core</artifactId>
     		<version>0.1.0-SNAPSHOT</version>
@@ -225,5 +231,5 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-    <url>https://github.com/topicquests/tqos-asr-documizer</url>
+    <url>https://github.com/KnowledgeGarden/tqos-asr2-documizer-agent</url>
 </project>

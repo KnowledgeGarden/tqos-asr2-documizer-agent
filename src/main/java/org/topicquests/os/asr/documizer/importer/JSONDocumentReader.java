@@ -31,6 +31,7 @@ import org.topicquests.os.asr.api.IStatisticsClient;
 import org.topicquests.os.asr.common.api.IASRFields;
 import org.topicquests.os.asr.documizer.DocumizerEnvironment;
 import org.topicquests.os.asr.documizer.api.IDocumizerModel;
+import org.topicquests.os.asr.documizer.para.ParagraphReader;
 import org.topicquests.support.ResultPojo;
 import org.topicquests.support.api.IResult;
 
@@ -45,6 +46,7 @@ public class JSONDocumentReader {
 	private IDocumentProvider provider;
 	private ISentenceClient sentenceDatabase;
 	private IParagraphProvider paragraphProvider;
+	private ParagraphReader paraReader;
 
 	private IStatisticsClient stats;
 //	private SentenceDetectorME detector;
@@ -59,6 +61,7 @@ public class JSONDocumentReader {
 		environment = env;
 		model = m;
 		provider = environment.getDocProvider();
+		paraReader = new ParagraphReader(environment);
 		sentenceDatabase = environment.getSentenceDatabase();
 		paragraphProvider = environment.getParagraphProvider();
 		credentials = new TicketPojo(ITQCoreOntology.SYSTEM_USER);
@@ -74,12 +77,12 @@ public class JSONDocumentReader {
 		String lox = doc.getId();
 		String pmcid = doc.getPMCID();
 		if (pmcid != null) {
-			stats.addToKey("PMCID Count");
+			stats.addToKey("PMCID_Count");
 		}
 		IResult r = provider.getDocument(lox, credentials);
 		if (r.getResultObject() != null) {
 			environment.logDebug("JSONDocumentReader.processJSON already exists "+lox);
-			//TODO must see if that's an abstract already
+			// TODO must see if that's an abstract already
 		} else {
 
 			//Then deal with paragraphs
@@ -100,114 +103,44 @@ public class JSONDocumentReader {
 	 */
 	void processParagraphs(IDocument doc) {
 		String lang = doc.getLanguage();
-		if (lang.equals("eng")) { //PubMed does that
+		String documentId = doc.getId();
+		String userId = doc.getCreatorId();
+		List<ISentence> mySentences;
+		if (lang == null || lang.equals("eng")) { //PubMed does that
 			lang = "en";
 			doc.setLanguage(lang);
 		}
-		/**
-		//list all abstracts
-		//MASSIVE TODO THIS IS NOT FINISHED - EMPTY FIELDS IN THE CONCORDANCEDOCUMENT
-		List<JSONObject> abstrs = doc.listAbstracts();
-		String abstr = null;
-		if (abstrs != null && !abstrs.isEmpty()) {
-			JSONObject jo;
-			Iterator<JSONObject> itr = abstrs.iterator();
-			while (itr.hasNext()) {
-				jo = itr.next();
-			}
-		}
-		environment.logDebug("JSONDocumentReader.processParagraphs "+abstr);
-		IParagraph p;
-		String docId = doc.getId();
-		String language = doc.getLanguage();
-		if (language == null)
-			language = "en";
-		if (abstr != null) {
-			p = doc.addParagraph(abstr, language);
-			paragraphProvider.putParagraph(p);
-		}
-		////////////////////
-		// LOOK FOR OTHER PARAGRAPHS
-		// Doc.listDetails returns the text body for all languges in the document
-		// here, we are just assuming "english"
-		// That's going to cause problems later on
-		////////////////////
-		List<String> details = doc.listDetails(); // gets all of them
-		if (details != null && !details.isEmpty()) {
-			Iterator<String> itr = details.iterator();
-			String det;
-			while (itr.hasNext()) {
-				det = itr.next();
-				p = doc.addParagraph(det, language);
-				paragraphProvider.putParagraph(p);				
-			}	
-		}
-		
-		*/
-		
-/*		List<IParagraph> px = doc.listParagraphs();
-		if (px != null && !px.isEmpty()) {
-			Iterator<IParagraph> itp = px.iterator();
-			while (itp.hasNext()) {
-				p = itp.next();
-				digestParagraph(p, doc.getLanguage(), doc.getId(), p.getID(), doc.getCreatorId());
-				//TODO need doc.updateParagraph()
-			}
-		}
-		//This argues for building IDocuments with details rather than paragraphs
-		List<String> lx = doc.listDetails(doc.getLanguage());
-		if (lx != null && !lx.isEmpty()) {
-			Iterator<String> itr = lx.iterator();
-			while (itr.hasNext()) {
-				abstr = itr.next();
-				p = model.newParagraph(abstr, doc.getLanguage());
-				digestParagraph(p, doc.getLanguage(), doc.getId(), p.getID(), doc.getCreatorId());
-				doc.addParagraph(p);
-			}
-		} */
-	}
-	
-	
-	
-	/**
-	 * Processes a paragraph including all of its sentences
-	 * @param p
-	 * @param language
-	 * @param documentLocator
-	 * @param userId
-	 * @return
-	 * /
-	IResult digestParagraph(IParagraph p, String language, String documentId, String paragraphId, String userId) {
-		String paragraph = p.getParagraph();
-		System.out.println("DigPara "+paragraph);
-		environment.logDebug("JSONDocumentReader.digestParagraph "+paragraph);
-		IResult result = new ResultPojo();
-		String [] sentences = detector.sentDetect(paragraph); //detectSentences(paragraph);
-		ISentence sx;
-		if (sentences != null) {
-			String sentence;
-			for (int i=0;i<sentences.length;i++) {
-				sentence = sentences[i];
-				//remove any "oxford comma": ', and"; ", or" --> " and"; " or"
-				sentence = deOxfordComma(sentence);
-				sx = model.newSentence(documentId, paragraphId, sentence, userId);
-				environment.logDebug("JSONDocumentReader.digestParagraph-1 "+sx.toJSONString());
-				IResult r = sentenceDatabase.put(documentId, paragraphId, sx.getID(), sx.getData());
-				if (r.hasError()) {
-					result.addErrorString(r.getErrorString());
+		List<IParagraph> parax = doc.listParagraphs();
+		if (parax == null) {
+			List<String> paras = doc.listParagraphStrings(lang);
+			if (paras != null && !paras.isEmpty()) {
+				IResult r;
+				//create paragraphs
+				parax = new ArrayList<IParagraph>();
+				String parx; // a paragraph string
+				Iterator<String>itr = paras.iterator();
+				IParagraph px = null;
+				while (itr.hasNext()) {
+					parx = itr.next();
+					px = model.newParagraph(parx, lang, documentId );
+					// gather the sentences
+					r = paraReader.digestParagraph(px, documentId, userId);
+					// ignore r; px is now populated with sentences
 				}
-				p.addSentence(sx);
-				stats.addToKey(IASRFields.SENTS_IMPORTED);
 			}
 		}
 		
-		return result;
+		if (parax != null && !parax.isEmpty()) {
+			//process paragraphs just in case
+			IParagraph para;
+			IResult r;
+			Iterator<IParagraph> itx = parax.iterator();
+			while (itx.hasNext()) {
+				para = itx.next();
+				r = paraReader.readParagraph(para, documentId, userId);
+				//ignore r;
+			}
+		}
 	}
-	*/
 	
-	String deOxfordComma(String sentence) {
-		String result = sentence.replaceAll(", and", " and");
-		result = result.replaceAll(", or", " or");
-		return result;
-	}
 }

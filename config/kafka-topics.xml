@@ -7,7 +7,7 @@
 	<parameter name="KAFKA_SERVER_PORT" value="9092" />
 
 	<!-- Consumer Topic -->
-	<parameter name="DocumizerTopic" value="documizer" />
+	<parameter name="DocumizerTopic" value="tagomizer" />
 
 	<parameter name="DocumizerParagraphTopic" value="paragraph" />
 	
