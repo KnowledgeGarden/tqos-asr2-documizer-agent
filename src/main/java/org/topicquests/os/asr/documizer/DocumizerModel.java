@@ -101,6 +101,8 @@ public class DocumizerModel implements IDocumizerModel {
 		return result;
 	}
 	
+	
+	
 	List<JSONObject> mergeAndUpdate(JSONObject newDoc, IDocument doc) {
 		JSONObject existingDoc = doc.getData();
 		String docId = doc.getId();
